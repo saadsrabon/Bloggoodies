@@ -19,10 +19,11 @@ const Login = () => {
       {/* <!-- Login Form into a box center of the page --> */}
       <div className="w-full md:w-1/2 mx-auto bg-[#030317] p-8 rounded-md mt-12">
         <h2 className="text-2xl font-bold mb-6">Login</h2>
-        <form onS>
+        <form onSubmit={handleSubmit(handleLogin)}>
           <div className="mb-6">
             <label htmlFor="email" className="block mb-2">Email</label>
             <input
+            {...register("email", { required: "Email is required"})}
               type="email"
               id="email"
               name="email"
@@ -32,6 +33,7 @@ const Login = () => {
           <div className="mb-6">
             <label htmlFor="password" className="block mb-2">Password</label>
             <input
+            {...register("password", { required: "Password is required"})}
               type="password"
               id="password"
               name="password"

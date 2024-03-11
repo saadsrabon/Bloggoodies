@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
 import { useForm,  } from "react-hook-form"
+import axios from "axios"
 
 // React Hook Form utilities
 
@@ -9,16 +10,34 @@ const Register = () => {
         handleSubmit,
         watch,
         formState: { errors },
+        setError,
       } = useForm()
-    
+    console.log(errors)
     // Register Function
     const handleRegister = async(data) => {
-      
+      try{
+      const response =await axios.post(`http://localhost:3000/auth/register`, data)
+      if(response.status === 200){
+        console.log(response.data)}
+
+
+      }
+        catch(err){
+            setError("root", {
+                type: "random",
+                message: err.response.data.error
+              });
+              console.log(err.response.data.error)
+        }
+       
     }
   return (
     <main>
+         
     <section className="container">
+   
       <div className="w-full md:w-1/2 mx-auto bg-[#030317] p-8 rounded-md mt-12">
+      {errors?.root && <p className="text-red-500 text-center  text-xs-l my-4">{errors.root?.message}!</p>}
         <h2 className="text-2xl font-bold mb-6">Register</h2>
         <form onSubmit={handleSubmit(handleRegister)} autoComplete="off">
           <div className="mb-6">
@@ -72,6 +91,7 @@ const Register = () => {
             >
               Create Account
             </button>
+           
           </div>
           <p className="text-center">
             Already have account? <Link to="/login" className="text-indigo-600 hover:underline">Login</Link>
