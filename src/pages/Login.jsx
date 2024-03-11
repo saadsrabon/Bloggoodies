@@ -1,14 +1,25 @@
 import { Link } from "react-router-dom"
-
+import { useForm,  } from "react-hook-form"
 
 const Login = () => {
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors },
+      } = useForm()
+    
+    // Register Function
+    const handleLogin = async(data) => {
+      
+    }
   return (
     <main>
     <section className="container">
       {/* <!-- Login Form into a box center of the page --> */}
       <div className="w-full md:w-1/2 mx-auto bg-[#030317] p-8 rounded-md mt-12">
         <h2 className="text-2xl font-bold mb-6">Login</h2>
-        <form action="">
+        <form onS>
           <div className="mb-6">
             <label htmlFor="email" className="block mb-2">Email</label>
             <input
