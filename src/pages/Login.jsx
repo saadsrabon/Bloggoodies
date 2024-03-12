@@ -1,17 +1,35 @@
-import { Link } from "react-router-dom"
+/* eslint-disable no-unused-vars */
+import { Link, useNavigate } from "react-router-dom"
 import { useForm,  } from "react-hook-form"
+import { useAuth } from "../hooks/useAuth"
+import axios from "axios"
 
 const Login = () => {
     const {
         register,
         handleSubmit,
-        watch,
         formState: { errors },
       } = useForm()
-    
+    const {setUser,login}=useAuth()
+    const navigate =useNavigate()
     // Register Function
     const handleLogin = async(data) => {
-      
+      //  api call korte hne
+      try{
+      const response = await axios.post('http://localhost:3000/auth/login',data)
+      if(response){
+        const authDetails =response.data
+        setUser(authDetails)
+        login(authDetails?.token?.accessToken,authDetails?.token?.refreshToken)
+        navigate('/')
+      }
+      console.log(response)
+      }
+      catch{
+        err=>console.log(err)
+      }
+      // api theke data pabo seita context e save korbo
+      //ekta Private Route korbo jate user data gulo k save kore.
     }
   return (
     <main>
@@ -49,7 +67,7 @@ const Login = () => {
             </button>
           </div>
           <p className="text-center">
-            Don't have an account? <Link to="/register" className="text-indigo-600 hover:underline">Register</Link>
+            {`Don't have an account?  `} <Link to="/register" className="text-indigo-600 hover:underline">Register</Link>
           </p>
         </form>
       </div>

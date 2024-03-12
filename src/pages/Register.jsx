@@ -17,7 +17,7 @@ const Register = () => {
     const handleRegister = async(data) => {
       try{
       const response =await axios.post(`http://localhost:3000/auth/register`, data)
-      if(response.status === 200){
+      if(response.status === 201){
         console.log(response.data)}
 
 
