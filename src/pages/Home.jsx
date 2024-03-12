@@ -9,10 +9,12 @@ const Home = () => {
   const [hasMore ,setHasMore]=useState(true)
   const [page,setPage]=useState(1)
   const [blogs,setBlogs]=useState([])
+  const [popular,setPopular]=useState([]);
+
   const loaderRef= useRef()
 const navigate=useNavigate()
   // ekta intersection observer nibo
-
+console.log(popular)
   useEffect(()=>{
     
     const fetchData =async()=>{
@@ -53,6 +55,23 @@ const navigate=useNavigate()
   const handleSingleBlog=(id)=>{
     navigate(`/blogdetails/${id}`)
   }
+
+  useEffect(()=>{
+    const fetchPopularItem =async()=>{
+      try{
+      const response =await axios.get('http://localhost:3000/blogs/popular?limit=4')
+      if(response){
+        setPopular(response.data?.blogs)
+      }
+    }
+    catch{
+      err=>console.log(err)
+    }
+
+     
+    }
+    fetchPopularItem()
+  },[])
   return (
     <main>
       {/* <!-- Begin Blogs --> */}
@@ -141,49 +160,19 @@ const navigate=useNavigate()
                 </h3>
 
                 <ul className="space-y-5 my-5">
-                  <li>
+                  {popular.map(item=>( <li onClick={()=>handleSingleBlog(item?.id)} key={item?.id} >
                     <h3 className="text-slate-400 font-medium hover:text-slate-300 transition-all cursor-pointer">
-                      How to Auto Deploy a Next.js App on Ubuntu from GitHub
+                     {item?.title}
                     </h3>
                     <p className="text-slate-600 text-sm">
                       by
-                      <a href="./profile.html">Saad Hasan</a>
-                      <span>·</span> 100 Likes
+                      <Link to="">{item?.author?.firstName} {item?.author?.lastName}</Link>
+                      <span>·  </span> {item?.likes?.length}
                     </p>
-                  </li>
+                  </li>))}
+                 
 
-                  <li>
-                    <h3 className="text-slate-400 font-medium hover:text-slate-300 transition-all cursor-pointer">
-                      How to Auto Deploy a Next.js App on Ubuntu from GitHub
-                    </h3>
-                    <p className="text-slate-600 text-sm">
-                      by
-                      <a href="./profile.html">Saad Hasan</a>
-                      <span>·</span> 100 Likes
-                    </p>
-                  </li>
-
-                  <li>
-                    <h3 className="text-slate-400 font-medium hover:text-slate-300 transition-all cursor-pointer">
-                      How to Auto Deploy a Next.js App on Ubuntu from GitHub
-                    </h3>
-                    <p className="text-slate-600 text-sm">
-                      by
-                      <a href="./profile.html">Saad Hasan</a>
-                      <span>·</span> 100 Likes
-                    </p>
-                  </li>
-
-                  <li>
-                    <h3 className="text-slate-400 font-medium hover:text-slate-300 transition-all cursor-pointer">
-                      How to Auto Deploy a Next.js App on Ubuntu from GitHub
-                    </h3>
-                    <p className="text-slate-600 text-sm">
-                      by
-                      <a href="./profile.html">Saad Hasan</a>
-                      <span>·</span> 100 Likes
-                    </p>
-                  </li>
+                  
                 </ul>
               </div>
 
