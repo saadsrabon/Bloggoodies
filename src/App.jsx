@@ -5,11 +5,10 @@ import Login from "./pages/Login"
 import Register from "./pages/Register"
 import Footer from "./components/common/Footer"
 import CreateBlog from "./pages/CreateBlog"
-import { useEffect } from "react"
-import { useAuth } from "./hooks/useAuth"
 import SingleBlog from "./pages/SingleBlog"
 import Profile from "./pages/Profile"
-import { PrivateRoute } from "./privateRoute/PrivateRoute"
+import PrivateRoute from "./privateRoute/PrivateRoute"
+
 
 
 

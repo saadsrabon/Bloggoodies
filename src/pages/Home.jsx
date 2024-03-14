@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { Link} from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 import BlogCard from "../components/blog/BlogCard";
+import MostPopular from "../components/blog/MostPopular";
+import Favorites from "../components/blog/Favorites";
+import { useAuth } from "../hooks/useAuth";
+import { useGetAuthor } from "../hooks/useGetAuthor";
 const Home = () => {
 
   const [hasMore ,setHasMore]=useState(true)
@@ -10,7 +14,7 @@ const Home = () => {
   const [popular,setPopular]=useState([]);
 
   const loaderRef= useRef()
-
+const  navigate =useNavigate()
   // ekta intersection observer nibo
 console.log(popular)
 
@@ -51,8 +55,12 @@ console.log(popular)
     }
   },[hasMore, page])
    
+  const handleSingleBlog=(id)=>{
+    navigate(`/blogdetails/${id}`)
 
-
+  }
+  const {currentUserId ,token}=useAuth()
+  const author=useGetAuthor(currentUserId)
   // Fetching Popular Items
   useEffect(()=>{
     const fetchPopularItem =async()=>{
@@ -96,65 +104,19 @@ console.log(popular)
                   Most Popular 👍️
                 </h3>
 
-                <ul className="space-y-5 my-5">
-                  {popular.map(item=>( <li  key={item?.id} >
-                    <h3 onClick={()=>handleSingleBlog(item?.id)} className="text-slate-400 font-medium hover:text-slate-300 transition-all cursor-pointer">
-                     {item?.title}
-                    </h3>
-                    <p className="text-slate-600 text-sm">
-                      by
-                      <Link to={`/profile/${item?.author?.id}`}>{item?.author?.firstName} {item?.author?.lastName}</Link>
-                      <span>·  </span> {item?.likes?.length}
-                    </p>
-                  </li>))}
-                 
-
-                  
-                </ul>
+             <MostPopular popular={popular} handleSingleBlog={handleSingleBlog} />
               </div>
 
               <div className="sidebar-card">
-                <h3 className="text-slate-300 text-xl lg:text-2xl font-semibold">
+                {
+                  token?(<><h3 className="text-slate-300 text-xl lg:text-2xl font-semibold">
                   Your Favourites ❤️
                 </h3>
 
-                <ul className="space-y-5 my-5">
-                  <li>
-                    <h3 className="text-slate-400 font-medium hover:text-slate-300 transition-all cursor-pointer">
-                      How to Auto Deploy a Next.js App on Ubuntu from GitHub
-                    </h3>
-                    <p className="text-slate-600 text-sm">
-                      #tailwindcss, #server, #ubuntu
-                    </p>
-                  </li>
-
-                  <li>
-                    <h3 className="text-slate-400 font-medium hover:text-slate-300 transition-all cursor-pointer">
-                      How to Auto Deploy a Next.js App on Ubuntu from GitHub
-                    </h3>
-                    <p className="text-slate-600 text-sm">
-                      #tailwindcss, #server, #ubuntu
-                    </p>
-                  </li>
-
-                  <li>
-                    <h3 className="text-slate-400 font-medium hover:text-slate-300 transition-all cursor-pointer">
-                      How to Auto Deploy a Next.js App on Ubuntu from GitHub
-                    </h3>
-                    <p className="text-slate-600 text-sm">
-                      #tailwindcss, #server, #ubuntu
-                    </p>
-                  </li>
-
-                  <li>
-                    <h3 className="text-slate-400 font-medium hover:text-slate-300 transition-all cursor-pointer">
-                      How to Auto Deploy a Next.js App on Ubuntu from GitHub
-                    </h3>
-                    <p className="text-slate-600 text-sm">
-                      #tailwindcss, #server, #ubuntu
-                    </p>
-                  </li>
-                </ul>
+               <Favorites/></>):<h3 className="text-slate-300 text-xl lg:text-2xl font-semibold">
+                 <Link to='/login' className="underline">Login</Link> to add your Favourite Items❤️
+                </h3>
+                }
               </div>
             </div>
           </div>

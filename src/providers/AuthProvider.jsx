@@ -19,12 +19,17 @@ export const AuthProvider = ({ children }) => {
             if(localRefreshToken){
                 setRefreshToken(localRefreshToken)
             }
+            const localCurrentId =localStorage.getItem('currentUserId')
+            if(localCurrentId){
+              setCurrentUserId(localCurrentId)
+            }
             
     },[])
     
       const login = (newToken,newRefreshToken,currentUserId) => {
         setToken(newToken)
         setRefreshToken(newRefreshToken)
+        setCurrentUserId(currentUserId)
         localStorage.setItem('token', newToken);
         localStorage.setItem('refreshToken',newRefreshToken)
         localStorage.setItem('currentUserId',currentUserId)

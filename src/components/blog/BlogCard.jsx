@@ -33,14 +33,14 @@ const BlogCard = ({blog}) => {
         </h3>
       </Link>
       <Link  to={`/blogdetails/${blog?.id}`} className="mb-6 text-base text-slate-500 mt-1">
-        {blog?.content}
+        {blog?.content.slice(0,250)}.... <span className='text-semibold underline'>see more</span>
       </Link>
 
       {/* <!-- Meta Informations --> */}
       <div className="flex justify-between items-center">
         <div className="flex items-center capitalize space-x-2">
-          <div className="avater-img bg-indigo-600 text-white">
-            <span className="">S</span>
+          <div onClick={(e)=>handleAuthor(e,blog?.author?.id)} className="avater-img bg-indigo-600 text-white">
+            <span className="">{blog?.author?.firstName?blog?.author?.firstName.charAt(0).toUpperCase():''}</span>
           </div>
 
           <div>
