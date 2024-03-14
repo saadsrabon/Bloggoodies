@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import dots from '../assets/icons/3dots.svg'
-import edit from '../assets/icons/edit.svg'
-import deleteIcon from '../assets/icons/delete.svg'
-import { Link, useNavigate } from "react-router-dom";
+import { Link} from "react-router-dom";
+import BlogCard from "../components/blog/BlogCard";
 const Home = () => {
 
   const [hasMore ,setHasMore]=useState(true)
@@ -12,9 +10,11 @@ const Home = () => {
   const [popular,setPopular]=useState([]);
 
   const loaderRef= useRef()
-const navigate=useNavigate()
+
   // ekta intersection observer nibo
 console.log(popular)
+
+// Implemented infinity Scroll
   useEffect(()=>{
     
     const fetchData =async()=>{
@@ -52,10 +52,8 @@ console.log(popular)
   },[hasMore, page])
    
 
-  const handleSingleBlog=(id)=>{
-    navigate(`/blogdetails/${id}`)
-  }
 
+  // Fetching Popular Items
   useEffect(()=>{
     const fetchPopularItem =async()=>{
       try{
@@ -82,68 +80,7 @@ console.log(popular)
             <div className="space-y-3 md:col-span-5">
               {/* <!-- Blog Card Start --> */}
               {blogs?.map(blog=>(
-                <div onClick={()=>handleSingleBlog(blog?.id)} key={blog?.id} className="blog-card">
-                <img
-                  className="blog-thumb"
-                  src={`http://localhost:3000/uploads/blog/${blog?.thumbnail}`}
-                  alt="ff"
-                />
-                <div className="mt-2 relative">
-                  <Link to={`/blogdetails/${blog?.id}`}  >
-                    <h3 className="text-slate-300 text-xl lg:text-2xl">
-                      <p >{blog?.title}</p>
-                    </h3>
-                  </Link>
-                  <Link  to={`/blogdetails/${blog?.id}`} className="mb-6 text-base text-slate-500 mt-1">
-                    {blog?.content}
-                  </Link>
-
-                  {/* <!-- Meta Informations --> */}
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center capitalize space-x-2">
-                      <div className="avater-img bg-indigo-600 text-white">
-                        <span className="">S</span>
-                      </div>
-
-                      <div>
-                        <h5 className="text-slate-500 text-sm">
-                          <a href="./profile.html">{blog?.author?.firstName } {blog?.author?.lastName }</a>
-                        </h5>
-                        <div className="flex items-center text-xs text-slate-700">
-                          <span>{blog?.createdAt}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="text-sm px-2 py-1 text-slate-700">
-                      <span>100 Likes</span>
-                    </div>
-                  </div>
-
-                  {/* <!-- action dot --> */}
-                  <div className="absolute right-0 top-0">
-                    <button>
-                      <img
-                        src={dots}
-                        alt="3dots of Action"
-                      />
-                    </button>
-
-                    {/* <!-- Action Menus Popup --> */}
-                    <div className="action-modal-container">
-                      <button className="action-menu-item hover:text-lwsGreen">
-                        <img src={edit}alt="Edit" />
-                        Edit
-                      </button>
-                      <button className="action-menu-item hover:text-red-500">
-                        <img src={deleteIcon} alt="Delete" />
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                  {/* <!-- action dot ends --> */}
-                </div>
-              </div>
+              <BlogCard blog={blog} key={blog?.id}/>
               ))}
               
 
@@ -160,13 +97,13 @@ console.log(popular)
                 </h3>
 
                 <ul className="space-y-5 my-5">
-                  {popular.map(item=>( <li onClick={()=>handleSingleBlog(item?.id)} key={item?.id} >
-                    <h3 className="text-slate-400 font-medium hover:text-slate-300 transition-all cursor-pointer">
+                  {popular.map(item=>( <li  key={item?.id} >
+                    <h3 onClick={()=>handleSingleBlog(item?.id)} className="text-slate-400 font-medium hover:text-slate-300 transition-all cursor-pointer">
                      {item?.title}
                     </h3>
                     <p className="text-slate-600 text-sm">
                       by
-                      <Link to="">{item?.author?.firstName} {item?.author?.lastName}</Link>
+                      <Link to={`/profile/${item?.author?.id}`}>{item?.author?.firstName} {item?.author?.lastName}</Link>
                       <span>·  </span> {item?.likes?.length}
                     </p>
                   </li>))}

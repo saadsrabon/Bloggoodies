@@ -20,7 +20,7 @@ const Login = () => {
       if(response){
         const authDetails =response.data
         setUser(authDetails)
-        login(authDetails?.token?.accessToken,authDetails?.token?.refreshToken)
+        login(authDetails?.token?.accessToken,authDetails?.token?.refreshToken,authDetails?.user?.id)
         navigate('/')
       }
       console.log(response)

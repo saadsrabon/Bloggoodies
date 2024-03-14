@@ -5,17 +5,19 @@ import { Link } from "react-router-dom";
 
 import { useAuth } from "../../hooks/useAuth";
 import { useEffect, useState } from "react";
+import { useGetAuthor } from './../../hooks/useGetAuthor';
+
 
 const Header = () => {
 
-const{logout,user,islogin ,token }=useAuth()
-console.log(token,"from header")
+const{logout,currentUserId,islogin ,token }=useAuth()
+console.log(currentUserId)
 
 const handleLogout =()=>{
   logout()
 }
-
-
+ const author =useGetAuthor(currentUserId)
+ 
   return (
     <header>
       <nav className="container">
@@ -42,7 +44,9 @@ const handleLogout =()=>{
               </Link>
             </li>
             
-            <li>
+           
+            {
+             islogin?(<> <li>
               <a
                 href="./search.html"
                 className="flex items-center gap-2 cursor-pointer"
@@ -51,15 +55,26 @@ const handleLogout =()=>{
                 <span>Search</span>
               </a>
             </li>
-            {
-             islogin?(<li>
+            <li>
               <button
                 onClick={handleLogout}
                 className="text-white/50 hover:text-white transition-all duration-200"
               >
                 Logout
               </button>
-            </li>):(<li>
+            </li>  <li className="flex items-center">
+              {/* <!-- Circular Div with background color --> */}
+              <div className="avater-img bg-orange-600 text-white">
+                <span className="">{author?.firstName?author?.firstName.charAt(0).toUpperCase():''}</span>
+                {/* <!-- User's first name initial --> */}
+              </div>
+
+              {/* <!-- Logged-in user's name --> */}
+              <Link to={`/profile/${author?.id}`}>
+                <span className="text-white ml-2 capitalize">{author?.firstName} {author?.lastName}</span>
+              </Link>
+              {/* <!-- Profile Image --> */}
+            </li></>):(<li>
               <Link to="/login"
             
                 className="text-white/50 hover:text-white transition-all duration-200"
@@ -68,19 +83,7 @@ const handleLogout =()=>{
               </Link>
             </li>)
             }
-            <li className="flex items-center">
-              {/* <!-- Circular Div with background color --> */}
-              <div className="avater-img bg-orange-600 text-white">
-                <span className="">S</span>
-                {/* <!-- User's first name initial --> */}
-              </div>
-
-              {/* <!-- Logged-in user's name --> */}
-              <a href="./profile.html">
-                <span className="text-white ml-2">Saad Hasan</span>
-              </a>
-              {/* <!-- Profile Image --> */}
-            </li>
+           
           </ul>
         </div>
       </nav>

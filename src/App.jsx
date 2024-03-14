@@ -8,6 +8,9 @@ import CreateBlog from "./pages/CreateBlog"
 import { useEffect } from "react"
 import { useAuth } from "./hooks/useAuth"
 import SingleBlog from "./pages/SingleBlog"
+import Profile from "./pages/Profile"
+import { PrivateRoute } from "./privateRoute/PrivateRoute"
+
 
 
 function App() {
@@ -20,8 +23,10 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/create-blog" element={<CreateBlog />} />
+      <Route path="/create-blog" element={<PrivateRoute><CreateBlog /></PrivateRoute>} />
       <Route path="/blogdetails/:id" element={<SingleBlog />} />
+      <Route path="/profile/:id" element={<Profile/>} />
+
      </Routes>
      <Footer/>
     </>
