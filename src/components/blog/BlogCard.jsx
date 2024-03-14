@@ -2,9 +2,14 @@
 
 import { Link, useNavigate } from 'react-router-dom'
 import dots from '../../assets/icons/3dots.svg'
-import edit from '../../assets/icons/edit.svg'
-import deleteIcon from '../../assets/icons/delete.svg'
+import ActionMenu from './ActionMenu'
+import { useState } from 'react'
+import { useAuth } from '../../hooks/useAuth'
+
 const BlogCard = ({blog}) => {
+
+  const [actionPopUp,setActionPopup]=useState(false)
+  const {currentUserId}=useAuth()
     const navigate=useNavigate()
     // Navigate to Single Blog
   const handleSingleBlog=(id)=>{
@@ -12,6 +17,10 @@ const BlogCard = ({blog}) => {
 
   }
 
+  const handlePopUp=(e)=>{
+    setActionPopup(prev=>!prev)
+    e.stopPropagation()
+  }
 
   const handleAuthor=(e,id)=>{
            navigate(`/profile/${id}`)
@@ -54,30 +63,26 @@ const BlogCard = ({blog}) => {
         </div>
 
         <div className="text-sm px-2 py-1 text-slate-700">
-          <span>{blog?.likes?.length}</span>
+          <span>Likes {blog?.likes?.length}</span>
         </div>
       </div>
 
       {/* <!-- action dot --> */}
       <div className="absolute right-0 top-0">
-        <button>
+        {
+          blog?.author?.id ==currentUserId && <button onClick={handlePopUp}>
           <img
             src={dots}
             alt="3dots of Action"
           />
         </button>
+        }
 
         {/* <!-- Action Menus Popup --> */}
-        <div className="action-modal-container">
-          <button className="action-menu-item hover:text-lwsGreen">
-            <img src={edit}alt="Edit" />
-            Edit
-          </button>
-          <button className="action-menu-item hover:text-red-500">
-            <img src={deleteIcon} alt="Delete" />
-            Delete
-          </button>
-        </div>
+        {
+          actionPopUp&&  <ActionMenu/>
+        }
+          
       </div>
       {/* <!-- action dot ends --> */}
     </div>
