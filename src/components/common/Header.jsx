@@ -4,19 +4,22 @@ import search from "../../assets/icons/search.svg";
 import { Link } from "react-router-dom";
 
 import { useAuth } from "../../hooks/useAuth";
-import { useEffect, useState } from "react";
+
 import { useGetAuthor } from './../../hooks/useGetAuthor';
+import { useProfile } from "../../hooks/useProfileStore";
 
 
 const Header = () => {
 
-const{logout,currentUserId,islogin ,token }=useAuth()
+const{logout,currentUserId,islogin}=useAuth()
 console.log(currentUserId)
 
 const handleLogout =()=>{
   logout()
 }
- const author =useGetAuthor(currentUserId)
+ const {state,dispatch}=useProfile()
+ const {author} =useGetAuthor(currentUserId,state,dispatch)
+
  
   return (
     <header>
@@ -65,12 +68,14 @@ const handleLogout =()=>{
             </li>  <li className="flex items-center">
               {/* <!-- Circular Div with background color --> */}
               <div className="avater-img bg-orange-600 text-white">
-                <span className="">{author?.firstName?author?.firstName.charAt(0).toUpperCase():''}</span>
+
+                {author?.avatar? <img className="rounded-full" src={`http://localhost:3000/uploads/avatar/${author?.avatar}`} alt="" />:<span className="">{author?.firstName?author?.firstName.charAt(0).toUpperCase():''}</span>}
+                
                 {/* <!-- User's first name initial --> */}
               </div>
 
               {/* <!-- Logged-in user's name --> */}
-              <Link to={`/profile/${author?.id}`}>
+              <Link to={`/profile/${currentUserId}`}>
                 <span className="text-white ml-2 capitalize">{author?.firstName} {author?.lastName}</span>
               </Link>
               {/* <!-- Profile Image --> */}

@@ -16,7 +16,7 @@ const Home = () => {
   const loaderRef= useRef()
 const  navigate =useNavigate()
   // ekta intersection observer nibo
-console.log(popular)
+
 
 // Implemented infinity Scroll
   useEffect(()=>{

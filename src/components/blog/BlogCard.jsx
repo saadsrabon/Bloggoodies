@@ -26,7 +26,7 @@ const BlogCard = ({blog}) => {
            navigate(`/profile/${id}`)
            e.stopPropagation()
   }
-  console.log(blog)
+  // console.log(blog)
   return (
     <div onClick={()=>handleSingleBlog(blog?.id)}  key={blog?.id} className="blog-card">
     <img

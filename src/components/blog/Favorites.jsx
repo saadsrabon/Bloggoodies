@@ -5,7 +5,7 @@ import { useAuth } from '../../hooks/useAuth'
 const Favorites = () => {
     const {currentUserId}=useAuth()
     const author =useGetAuthor(currentUserId)
-    console.log(author)
+    // console.log(author)
   return (
     <ul className="space-y-5 my-5">
         {author?.favourites?.length===0? (<h2>You do not have any favourite items</h2>):(
