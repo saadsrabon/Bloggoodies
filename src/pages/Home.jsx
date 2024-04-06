@@ -6,6 +6,7 @@ import MostPopular from "../components/blog/MostPopular";
 import Favorites from "../components/blog/Favorites";
 import { useAuth } from "../hooks/useAuth";
 import { useGetAuthor } from "../hooks/useGetAuthor";
+import useBlog from "../hooks/useBlog";
 const Home = () => {
 
   const [hasMore ,setHasMore]=useState(true)
@@ -17,17 +18,23 @@ const Home = () => {
 const  navigate =useNavigate()
   // ekta intersection observer nibo
 
+const {state,dispatch}=useBlog()
 
+console.log(state ,"blogstate")
 // Implemented infinity Scroll
   useEffect(()=>{
     
     const fetchData =async()=>{
+      dispatch({type:'BlogIsFetching'})
       const response= await axios.get(`http://localhost:3000/blogs?page=${page}&limit=1`)
-     console.log(response)
+      
      if(response?.data?.blogs.length===0){
+
       setHasMore(false)
 
      }else{
+      dispatch({type:'BlogFetched',payload:response.data.blogs})
+
       setBlogs(prevBlogs=>[
         ...prevBlogs,
         ...response.data.blogs,
@@ -53,7 +60,7 @@ const  navigate =useNavigate()
     return ()=>{
       if(observer) observer.disconnect()
     }
-  },[hasMore, page])
+  },[dispatch, hasMore, page])
    
   const handleSingleBlog=(id)=>{
     navigate(`/blogdetails/${id}`)

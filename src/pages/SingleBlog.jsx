@@ -5,13 +5,20 @@ import favourite from "../assets/icons/heart.svg"
 import like from "../assets/icons/like.svg"
 import favourited from '../assets/icons/heart-filled.svg'
 import { useAuth } from './../hooks/useAuth';
+import { useGetAuthor } from './../hooks/useGetAuthor';
+import { useProfile } from "../hooks/useProfileStore"
+import Comment from "../components/blog/Comment"
+import useAxiosWithAuth from "../hooks/useAxios"
+
 
 const SingleBlog = () => {
     const url =window.location.pathname.split("/")[2]
- 
+    const [refresh,setRefresh]=useState({status:false})
+    const axiosApi=useAxiosWithAuth()
 const [blog,setBlog]=useState({})
  const {currentUserId}=useAuth()
- console.log(currentUserId)
+ const {state,dispatch}=useProfile()
+ const {author}=useGetAuthor(currentUserId,state,dispatch)
     useEffect(()=>{
         const fetchSingleBlog =async(id)=>{
                const response =await axios.get(`http://localhost:3000/blogs/${id}`)
@@ -20,6 +27,21 @@ const [blog,setBlog]=useState({})
 
         fetchSingleBlog(url)
     },[url])
+   console.log(refresh)
+   const handleComment=async(e)=>{
+       e.preventDefault()
+       try{
+        const response = await axiosApi.post(`http://localhost:3000/blogs/${blog?.id}/comment`,{content:e.target.comment.value})
+        console.log(response.data)
+        setRefresh(prevState => ({ ...prevState, status: !prevState.status }));
+        e.target.comment.value=''
+       }catch{
+          err=>console.log(err)
+       }
+       
+    }
+
+    useEffect(()=>{},[refresh])
   return (
     <>
     <main>
@@ -30,12 +52,12 @@ const [blog,setBlog]=useState({})
         <div className="flex justify-center items-center my-4 gap-4">
           <div className="flex items-center capitalize space-x-2">
             <div className="avater-img bg-indigo-600 text-white">
-              <span className="">S</span>
+            {blog?.author?.avatar? <img className="rounded-full" src={`http://localhost:3000/uploads/avatar/${blog?.author?.avatar}`} alt="" />:<span className="">{blog?.author?.firstName?blog?.author?.firstName.charAt(0).toUpperCase():''}</span>}
             </div>
             <h5 className="text-slate-500 text-sm">{blog?.author?.firstName} {blog?.author?.lastName}</h5>
           </div>
           <span className="text-sm text-slate-700 dot">{blog?.createdAt}</span>
-          <span className="text-sm text-slate-700 dot">{blog?.likes?.length}</span>
+          <span className="text-sm text-slate-700 dot">Likes {blog?.likes?.length}</span>
         </div>
         <img className="mx-auto w-full md:w-8/12 object-cover h-80 md:h-96"  src={`http://localhost:3000/uploads/blog/${blog?.thumbnail}`} alt="" />
 
@@ -57,80 +79,32 @@ const [blog,setBlog]=useState({})
     {/* <!-- Begin Comments --> */}
     <section id="comments">
       <div className="mx-auto w-full md:w-10/12 container">
-        <h2 className="text-3xl font-bold my-8">Comments (3)</h2>
+        <h2 className="text-3xl font-bold my-8">Comments ({blog?.comments?.length})</h2>
         {currentUserId &&
         <div className="flex items -center space-x-4">
           <div className="avater-img bg-indigo-600 text-white">
-            <span className="">S</span>
+          {author?.avatar? <img className="rounded-full" src={`http://localhost:3000/uploads/avatar/${author?.avatar}`} alt="" />:<span className="">{author?.firstName?author?.firstName.charAt(0).toUpperCase():''}</span>}
           </div>
-          <div className="w-full">
-            <textarea
+          <form onSubmit={handleComment} className="w-full">
+            <textarea 
+             name="comment"
               className="w-full bg-[#030317] border border-slate-500 text-slate-300 p-4 rounded-md focus:outline-none"
               placeholder="Write a comment"
             ></textarea>
             <div className="flex justify-end mt-4">
               <button
+                type="submit"
                 className="bg-indigo-600 text-white px-6 py-2 md:py-3 rounded-md hover:bg-indigo-700 transition-all duration-200"
               >
                 Comment
               </button>
             </div>
-          </div>
+          </form>
         </div>}
 
         {/* <!-- Comment One --> */}
-        <div className="flex items-start space-x-4 my-8">
-          <div className="avater-img bg-orange-600 text-white">
-            <span className="">S</span>
-          </div>
-          <div className="w-full">
-            <h5 className="text-slate -500 font-bold">Saad Hasan</h5>
-            <p className="text-slate-300">
-              Today I was mob programming with Square's Mobile & Performance Reliability team and we toyed with an
-              interesting idea. Our codebase has classNamees that represent screens a user can navigate to. These classNamees
-              are defined in modules, and these modules have an owner team defined. When navigating to a screen, we
-              wanted to have the owner team information available, at runtime. We created a build tool that looks at
-              about 1000 Screen classNamees, determines the owner team, and generates a className to do the lookup at runtime.
-              The generated code looked like this:
-            </p>
-          </div>
-        </div>
-
-        {/* <!-- Comment Two --> */}
-        <div className="flex items-start space-x-4 my-8">
-          <div className="avater-img bg-green-600 text-white">
-            <span className="">S</span>
-          </div>
-          <div className="w-full">
-            <h5 className="text-slate -500 font-bold">Saad Hasan</h5>
-            <p className="text-slate-300">
-              Today I was mob programming with Square's Mobile & Performance Reliability team and we toyed with an
-              interesting idea. Our codebase has classNamees that represent screens a user can navigate to. These classNamees
-              are defined in modules, and these modules have an owner team defined. When navigating to a screen, we
-              wanted to have the owner team information available, at runtime. We created a build tool that looks at
-              about 1000 Screen classNamees, determines the owner team, and generates a className to do the lookup at runtime.
-              The generated code looked like this:
-            </p>
-          </div>
-        </div>
-
-        {/* <!-- Comment Three --> */}
-        <div className="flex items-start space-x-4 my-8">
-          <div className="avater-img bg-indigo-600 text-white">
-            <span className="">S</span>
-          </div>
-          <div className="w-full">
-            <h5 className="text-slate -500 font-bold">Saad Hasan</h5>
-            <p className="text-slate-300">
-              Today I was mob programming with Square's Mobile & Performance Reliability team and we toyed with an
-              interesting idea. Our codebase has classNamees that represent screens a user can navigate to. These classNamees
-              are defined in modules, and these modules have an owner team defined. When navigating to a screen, we
-              wanted to have the owner team information available, at runtime. We created a build tool that looks at
-              about 1000 Screen classNamees, determines the owner team, and generates a className to do the lookup at runtime.
-              The generated code looked like this:
-            </p>
-          </div>
-        </div>
+        {blog?.comments?.map(item=>(<Comment comment={item} key={item?.id}  />))}
+        
       </div>
     </section>
   </main>
